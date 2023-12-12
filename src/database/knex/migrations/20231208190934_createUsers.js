@@ -6,7 +6,7 @@ exports.up = (knex) =>
     table.text("email").notNullable();
     table.text("password").notNullable();
 
-    table.boolean("isAdmin").notNullable();
+    table.boolean("isAdmin").defaultTo(false);
   });
 
 exports.down = (knex) => knex.schema.dropTable("users");
