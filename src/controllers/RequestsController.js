@@ -39,7 +39,8 @@ class RequestsController {
       .select([
         "requests.id",
         "requests.quantity",
-        "dishes.name",
+        "dishes.id as dish_id",
+        "dishes.name as dish_name",
         "dishes.price",
         "dishes.photo",
       ])
@@ -51,6 +52,14 @@ class RequestsController {
     });
 
     return response.json(requestsWithSubTotal);
+  }
+
+  async delete(request, response) {
+    const { id } = request.params;
+
+    await knex("requests").where({ id }).delete();
+
+    return response.json();
   }
 }
 
