@@ -31,11 +31,16 @@ class DishesRepository {
   async findDishByNameOrIngredients(search) {
     return await knex
       .select("d.*")
+      .distinct()
       .from("dishes as d")
-      .join("ingredients as i", "d.id", "i.dish_id")
-      .whereLike("d.name", `%${search}%`)
-      .orWhereLike("i.name", `%${search}%`)
-      .groupBy("d.id");
+      .leftJoin("ingredients as i", "d.id", "i.dish_id")
+      .where((builder) => {
+        if (search) {
+          builder
+            .where("d.name", "like", `%${search}%`)
+            .orWhere("i.name", "like", `%${search}%`);
+        }
+      });
   }
 
   async createDishIngredients(ingredients) {
